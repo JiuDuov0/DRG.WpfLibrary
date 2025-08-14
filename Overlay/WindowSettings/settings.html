@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>设置页面</title>
+    <style>
+        body.dark {
+            background: transparent;
+            color: #eee;
+        }
+
+        body.normal {
+            background: transparent;
+            color: #222;
+        }
+
+        .container {
+            margin: 40px auto;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: inherit;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .key-display {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body class="dark">
+    <div class="container">
+        <h2>窗口设置</h2>
+        <label>按下某个按键设置 Key：</label>
+        <input type="text" id="keyInput" placeholder="请按下一个键" autocomplete="off">
+        <div class="key-display" id="keyDisplay">当前按键: H</div>
+
+        <label for="themeSelect">主题设置：</label>
+        <select id="themeSelect">
+            <option value="normal">正常</option>
+            <option value="dark">黑暗</option>
+        </select>
+
+        <button id="saveBtn" style="width:100%;padding:8px;margin-top:10px;">保存设置</button>
+
+    </div>
+    <script>
+        let currentKey = "H";
+        window.settingsData = null;
+        window.receiveSettingsData = function (data) {
+            let jsonData = null;
+            try {
+                if (typeof data === 'object') {
+                    jsonData = data;
+                } else {
+                    jsonData = JSON.parse(data);
+                }
+            } catch (e) {
+                console.error('数据不是有效的JSON:', e);
+            }
+            window.settingsData = jsonData;
+            console.log("Received json data:", jsonData);
+            // 绑定页面内容
+            if (jsonData) {
+                if (jsonData.Key) {
+                    currentKey = jsonData.Key;
+                    document.getElementById('keyDisplay').textContent = "当前按键: " + jsonData.Key;
+                }
+                if (jsonData.theme) {
+                    document.getElementById('themeSelect').value = jsonData.theme;
+                    document.body.className = jsonData.theme;
+                }
+            }
+        }
+
+        // 按键捕获与显示
+        const keyInput = document.getElementById('keyInput');
+        keyInput.addEventListener('focus', function () {
+            this.value = '';
+        });
+        keyInput.addEventListener('keydown', function (e) {
+            e.preventDefault();
+            currentKey = e.key;
+            document.getElementById('keyDisplay').textContent = "当前按键: " + currentKey;
+            this.value = currentKey;
+        });
+
+        // 主题切换
+        // document.getElementById('themeSelect').addEventListener('change', function () {
+        //     document.body.className = this.value;
+        // });
+
+        // 默认主题
+        document.body.className = document.getElementById('themeSelect').value;
+
+        // 保存按钮事件
+        document.getElementById('saveBtn').addEventListener('click', function () {
+            // 构造要保存的数据
+            const saveData = {
+                Key: currentKey,
+                theme: document.getElementById('themeSelect').value
+            };
+            // 发送到 WPF
+            window.chrome.webview.postMessage(JSON.stringify(saveData));
+        });
+    </script>
+</body>
+
+</html>
