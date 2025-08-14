@@ -63,6 +63,23 @@ The Overlay folder contains resources and code related to the WPF library's Over
 ```
 x:\Code\YourProject\bin\Debug\net9.0-windows
 ```
+1. **文件夹 Folder**  
+   文件夹名称为您的 MOD 名称。  
+   The folder name should be your MOD name.
+
+2. **Index.html**  
+   该文件为您需要在遮罩层显示的内容。  
+   This file contains the content you want to display in the overlay.
+
+3. **settings.html**  
+   该文件是您需要与 `settings.json` 进行交互的内容。  
+   This file is used to interact with `settings.json`.
+
+4. **settings.json**  
+   该文件是您需要与 `settings.html` 进行交互的内容。`x` 和 `y` 是位置信息，`width` 和 `height` 是宽高信息。这 4 项如果您有 `index.html` 则必须填写，否则不需要填写。  
+   This file is used to interact with `settings.html`.  
+   `x` and `y` are position information; `width` and `height` are size information.  
+   If you have `index.html`, these four items must be filled in; otherwise, they are not required.
 
 ## 开发环境  
 ## Development Environment
