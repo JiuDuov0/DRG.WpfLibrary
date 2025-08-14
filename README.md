@@ -8,11 +8,39 @@
 
 1. **启用 WPF 支持**  
    在 `<PropertyGroup>` 节点中添加：
+```
 <UseWPF>true</UseWPF>
+```
 2. **设置目标框架**  
    将 `<TargetFramework>` 修改为：
+```
 <TargetFramework>net9.0-windows</TargetFramework>
+```
 这样配置后，您的项目即可正常引用和使用本 WPF 类库的功能。
+
+## 引用示例
+```
+using DRG.WpfLibrary.Demo;
+
+const int maxRetries = 3;
+int attempt = 0;
+bool success = false;
+
+while (attempt < maxRetries && !success)
+{
+    try
+    {
+        _ = new Start();
+        success = true;
+    }
+    catch (Exception)
+    {
+        attempt++;
+    }
+}
+```
+
+这样即可在您的项目中正常引用和使用 WPF 类库的功能。
 
 ## 开发环境
 
